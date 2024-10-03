@@ -1,0 +1,9 @@
+com/example/lms/controller/CSVControllerTests.class
+com/example/lms/service/BookServiceTests.class
+com/example/lms/controller/ReaderControllerTests.class
+com/example/lms/service/IssueServiceTests.class
+com/example/lms/service/ReaderServiceTests.class
+com/example/lms/LmsApplicationTests.class
+com/example/lms/controller/IssueControllerTests.class
+com/example/lms/controller/BookControllerTests.class
+com/example/lms/service/CSVServiceTests.class

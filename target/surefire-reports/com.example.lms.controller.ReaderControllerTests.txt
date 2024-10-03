@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.lms.controller.ReaderControllerTests
+-------------------------------------------------------------------------------
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.410 s -- in com.example.lms.controller.ReaderControllerTests

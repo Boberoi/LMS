@@ -1,0 +1,26 @@
+<Configuration status="WARN" name="LMS">
+    <Properties>
+        <Property name="log-path">logs</Property>
+    </Properties>
+    <Appenders>
+
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <Pattern> pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" </Pattern>
+        </Console>
+
+<!--        <RollingFile name="RollingFileAppender" filePattern="${log-path}/${logfile-name}-%d{yyyy-MM-dd}.log">-->
+<!--            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN} ${sys:PID} -&#45;&#45; [%15.15t] %c : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}" />-->
+<!--            <Policies>-->
+<!--                <TimeBasedTriggeringPolicy />-->
+<!--            </Policies>-->
+<!--            <DirectWriteRolloverStrategy/>-->
+<!--        </RollingFile>-->
+
+    </Appenders>
+    <Logger>
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+<!--            <AppenderRef ref="RollingFileAppender"/>-->
+        </Root>
+    </Logger>
+</Configuration>
