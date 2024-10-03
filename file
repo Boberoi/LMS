@@ -1,0 +1,11 @@
+Id,Title,Description,Location,Price,AvailableQuantity,IssuedQuantity,AuthorNames,CategoryName
+1,"The Great Gatsby","A novel set in the 1920s about the American Dream.","Library A",10.99,5,2,"Author;John Doe","Fiction"
+2,"To Kill a Mockingbird","A novel about racial injustice in the Deep South.","Library B",8.99,3,1,"Harper Lee;Author","Classic"
+3,"1984","A dystopian novel about totalitarianism and surveillance.","Library A",12.50,8,3,"George Orwell","Dystopian"
+4,"Harry Potter and the Sorcerer's Stone","A young boy discovers he is a wizard and attends a magical school.","Library C",15.00,10,4,"J.K. Rowling","Fantasy"
+5,"The Catcher in the Rye","A story about teenage angst and alienation.","Library B",9.99,4,1,"J.D. Salinger","Fiction"
+6,"Brave New World","A novel that explores a futuristic society driven by technology and control.","Library A",11.00,7,2,"Aldous Huxley","Dystopian"
+7,"The Hobbit","A fantasy novel about the adventures of Bilbo Baggins.","Library C",14.95,6,3,"J.R.R. Tolkien","Fantasy"
+8,"Pride and Prejudice","A romantic novel about the manners and matrimonial machinations of British gentry.","Library B",7.99,5,0,"Jane Austen","Classic"
+9,"The Alchemist","A novel about a shepherd's journey to discover his personal legend.","Library C",10.00,4,1,"Paulo Coelho","Adventure"
+10,"Crime and Punishment","A philosophical novel exploring morality, guilt, and redemption.","Library A",13.50,2,1,"Fyodor Dostoevsky","Philosophical"
