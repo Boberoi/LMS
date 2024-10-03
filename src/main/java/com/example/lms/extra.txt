@@ -1,0 +1,128 @@
+private List<Books> parseBookCSV(MultipartFile file , ExecutorService executorService) throws IOException {
+        List<Books> books = Collections.synchronizedList(new ArrayList<>());
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            HeaderColumnNameMappingStrategy<BookDto> stratergy = new HeaderColumnNameMappingStrategy<>();
+            stratergy.setType(BookDto.class);
+
+            CsvToBean<BookDto> csvToBean = new CsvToBeanBuilder<BookDto>(br)
+                    .withMappingStrategy(stratergy)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreLeadingWhiteSpace(true).build();
+
+            List<BookDto> bookDtoList = csvToBean.parse();
+            List<Future<Books>> futures = new ArrayList<>();
+
+            Set<String> existingCategories = new HashSet<>();
+            Set<String> existingAuthors = new HashSet<>();
+
+            for (BookDto csvLine : bookDtoList) {
+                futures.add(executorService.submit(() -> {
+                    String categoryName = csvLine.getCategoryName();
+                    Category category = addCategory(categoryName);
+
+                    List<Author> authors = addAuthor(csvLine.getAuthorNames());
+
+                    return Books.builder().title(csvLine.getTitle())
+                            .price(csvLine.getPrice())
+                            .description(csvLine.getDescription())
+                            .location(csvLine.getLocation())
+                            .available_quantity(csvLine.getAvailable_quantity())
+                            .issue_quantity(csvLine.getIssue_quantity())
+                            .category(category).authors(authors)
+                            .build();
+                }));
+            }
+            // result from futures
+            for (Future<Books> future : futures) {
+                try {
+                    books.add(future.get());
+                }
+                catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return books;
+    }
+
+    private synchronized Category addCategory(String categoryName) {
+       Category category = categoryRepo.findByName(categoryName.trim());
+       if (category == null) {
+           category = new Category(categoryName.trim());
+           categoryRepo.save(category);
+       }
+       return category;
+    }
+
+    private synchronized List<Author> addAuthor(String authorNames) {
+        Set<Author> authors = new HashSet<>();
+        for(String authorName : authorNames.split(";")) {
+            Author author = authorRepo.findByName(authorName.trim());
+            if (author == null) {
+                author = new Author();
+                author.setName(authorName.trim());
+                authorRepo.save(author);
+            }
+            authors.add(author);
+        }
+        return new ArrayList<>(authors);
+    }
+
+
+    /////   WITH OUT MULTI THREADING
+
+        private List<Books> parseBookCSV(MultipartFile file , ExecutorService executorService) throws IOException {
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+                HeaderColumnNameMappingStrategy<BookDto> stratergy = new HeaderColumnNameMappingStrategy<>();
+                stratergy.setType(BookDto.class);
+
+                CsvToBean<BookDto> csvToBean = new CsvToBeanBuilder<BookDto>(br)
+                        .withMappingStrategy(stratergy)
+                        .withIgnoreEmptyLine(true)
+                        .withIgnoreLeadingWhiteSpace(true).build();
+
+                Set<String> existingCategories = new HashSet<>();
+                Set<String> existingAuthors = new HashSet<>();
+
+                return csvToBean.parse().stream()
+                        .map( csvLine -> {
+
+                            Category category = categoryRepo.findByName(csvLine.getCategoryName());
+                            existingCategories.add(category.getName());
+
+                            List<Author> authors = new ArrayList<>();
+
+                            String csvAuthors  = csvLine.getAuthorNames();
+                            for(String authorName : csvAuthors.split(";")) {
+                                Author author = authorRepo.findByName(authorName.trim());
+                                if (author == null) {
+                                    author = new Author();
+                                    author.setName(authorName.trim());
+                                    author = authorRepo.save(author);
+                                }
+                                authors.add(author);
+                                existingAuthors.add(author.getName());
+                            }
+                            Books.BooksBuilder booksBuilder = Books.builder().title(csvLine.getTitle())
+                                    .price(csvLine.getPrice())
+                                    .description(csvLine.getDescription())
+                                    .location(csvLine.getLocation())
+                                    .available_quantity(csvLine.getAvailable_quantity())
+                                    .issue_quantity(csvLine.getIssue_quantity())
+                                    .category(category).authors(authors);
+
+                            return booksBuilder.build();
+                        }).collect(Collectors.toList());
+
+
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
